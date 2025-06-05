@@ -8,8 +8,8 @@ import { CodigoVip } from '../interfaces/codigo-vip';
 })
 export class CodigoVipServiceService {
 
- //private apiUrl = 'http://localhost:8080/codigos-vip';
- private apiUrl = 'https://pruebaback-5.onrender.com/codigos-vip';
+ private apiUrl = 'http://localhost:8080/codigos-vip';
+ //private apiUrl = 'https://pruebaback-5.onrender.com/codigos-vip';
   constructor(private http: HttpClient) {}
 
   generarCodigoVip(cantidadRifas: number): Observable<any> {

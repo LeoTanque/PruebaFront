@@ -3,21 +3,22 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, map, Observable, switchMap, tap, throwError } from 'rxjs';
 import { Raffle } from '../interfaces/raffle';
 import { environment } from '../../environment/environment';
+import { RifaGanadorDTO } from '../interfaces/rifa-ganador-dto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RaffleService {
 
-  //private baseUrl = 'http://localhost:8080/api/images';
-  private baseUrl = 'https://pruebaback-5.onrender.com/api/images';
+  private baseUrl = 'http://localhost:8080/api/images';
+  //private baseUrl = 'https://pruebaback-5.onrender.com/api/images';
 
-  //private apiUrl = 'http://localhost:8080/api/rifas';
-  private apiUrl = 'https://pruebaback-5.onrender.com/api/rifas';
+  private apiUrl = 'http://localhost:8080/api/rifas';
+  //private apiUrl = 'https://pruebaback-5.onrender.com/api/rifas';
 
-  //private VIPUrl ='http://localhost:8080/codigos-vip'
+  private VIPUrl ='http://localhost:8080/codigos-vip'
 
-  private VIPUrl ='https://pruebaback-5.onrender.com/codigos-vip';
+  //private VIPUrl ='https://pruebaback-5.onrender.com/codigos-vip';
 
   constructor(private http: HttpClient) { }
 
@@ -33,6 +34,7 @@ export class RaffleService {
   getRafflesByUser(userId: number): Observable<Raffle[]> {
     return this.http.get<Raffle[]>(`${this.apiUrl}/usuario/${userId}`);
   }
+
 
 
 
@@ -95,7 +97,8 @@ export class RaffleService {
 
 
   deleteImage(fileName: string): Observable<void> {
-    const url = `https://pruebaback-5.onrender.com/api/images/${fileName}`;
+
+      const url = `http://localhost:8080/api/images/${fileName}`;
     return this.http.delete<void>(url);
   }
 
@@ -125,6 +128,14 @@ export class RaffleService {
   }
 
 
+obtenerRifasPorUsuarioId(usuarioId: number): Observable<Raffle[]> {
+  return this.http.get<Raffle[]>(`${this.apiUrl}/usuario/${usuarioId}`).pipe(
+    catchError((error) => {
+      console.error('❌ Error al obtener rifas del usuario:', error);
+      return throwError(() => new Error('Error al obtener rifas del usuario.'));
+    })
+  );
+}
 
 
 
@@ -148,12 +159,46 @@ export class RaffleService {
 
 
 
+
+
   obtenerRifaPorId(id: number): Observable<Raffle> {
-    const url = `${this.apiUrl}/${id}`;
-    return this.http.get<Raffle>(url).pipe(
-      catchError((error) => this.handleError(error))
-    );
-  }
+  return this.http.get<Raffle>(`${this.apiUrl}/${id}`).pipe(
+    tap(response => console.log("📌 Rifa obtenida:", response)),
+    catchError((error) => this.handleError(error))
+  );
+}
+
+
+
+
+
+
+getRaffleById(id: number): Observable<RifaGanadorDTO | Raffle> {
+  return this.http.get<RifaGanadorDTO | Raffle>(`${this.apiUrl}/${id}`);
+}
+
+executeRaffle(id: number): Observable<RifaGanadorDTO | Raffle> {
+  return this.http.put<RifaGanadorDTO | Raffle>(`${this.apiUrl}/execute/${id}`, null);
+}
+
+getAllWinners(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/winners`).pipe(
+    catchError((error) => {
+      console.error('❌ Error al obtener ganadores:', error);
+      return throwError(() => new Error('Error al obtener ganadores.'));
+    })
+  );
+}
+
+getWinnerByRaffleId(rifaId: number): Observable<RifaGanadorDTO> {
+  return this.http.get<RifaGanadorDTO>(`${this.apiUrl}/winners/${rifaId}`).pipe(
+    catchError((error) => {
+      console.error('❌ Error al obtener ganador de la rifa:', error);
+      return throwError(() => new Error('Error al obtener ganador de la rifa.'));
+    })
+  );
+}
+
 
 
 }

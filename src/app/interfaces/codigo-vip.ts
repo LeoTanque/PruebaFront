@@ -1,6 +1,6 @@
 export interface CodigoVip {
   id?:number,
-  codigoVip: string,
+  codigo: string,
   utilizado?:boolean,
   cantidadRifas: number
 }

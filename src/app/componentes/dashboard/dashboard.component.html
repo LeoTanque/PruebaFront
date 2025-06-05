@@ -15,10 +15,6 @@
         </div>
 
 
-        <!--button-- class="raffle-code" *ngIf="raffle.code" (click)="copyToClipboard(raffle.code)">
-          {{ raffle.code }}
-          <i class="pi pi-copy" style="margin-left: 5px;"></i>
-        </!--button-->
 
 
 
@@ -29,9 +25,9 @@
 
           <h4 class="fw-bold">{{ raffle.nombre }}</h4>
           <p>{{ raffle.producto.nombre }}</p>
-          <!--p>{{ raffle.producto.descripcion }}</!--p-->
+
           <div class="formatted-description" [innerHTML]="raffle.producto.descripcion"></div>
-          <!--p>{{raffle.precio}}</!--p-->
+
 
           <p-carousel
             [value]="raffle.producto.imagenes"
@@ -53,24 +49,9 @@
             </ng-template>
           </p-carousel>
 
-          <!--p-carousel
-  [value]="raffle.producto.imagenes"
-  [numVisible]="1"
-  [numScroll]="1"
-  [circular]="true"
-  [responsiveOptions]="responsiveOptions">
-  <ng-template let-image pTemplate="item">
-    <div class="image-wrapper">
-      <img [src]="image" alt="Imagen del producto" class="carousel-img" />
-    </div>
-  </ng-template>
-</p-carousel-->
 
 
 
-             <!--a-- [href]="'/external-raffle/' + raffle.id" target="_blank" rel="noopener noreferrer" class="link">
-              Link al sorteo
-          </!--a-->
 
           <div class="raffle-container">
             <a [href]="'/external-raffle/' + raffle.id"
@@ -92,28 +73,6 @@
 
 
 
-
-          <!--div class="flex gap-2 mt-2">
-            <button pButton type="button" label="Compartir" icon="pi pi-share"
-                    class="p-button-info p-button-sm" (click)="shareOnWhatsApp()"></button>
-
-            <button pButton type="button" label="Ejecutar Sorteo"
-                    class="p-button-warning p-button-sm" (click)="executeRaffle($event, raffle)"></button>
-
-            <button pButton type="button" label="Eliminar"
-                    class="p-button-danger p-button-sm" (click)="deleteRaffle(raffle)"></button>
-
-
-          </!--div>
-          <div-- class="button-group" style="text-align: center; margin-top: 1rem;">
-            <button pButton type="button" label="Ver Participantes" icon="pi pi-users"
-                    class="p-button-secondary p-button-sm" (click)="raffle.id && mostrarParticipantes(raffle.id)"></button>
-            <br />
-            <button pButton type="button" label="Ver Banner" icon="pi pi-eye"
-                    class="p-button-success p-button-sm mt-2"
-                    (click)="openBanner(raffle)"></button>
-          </div-->
-
           <div style="height: 50px; position: relative; margin-top: 10px;" class="speeddial-linear-demo">
             <p-speedDial
             [model]="getActions(raffle)"
@@ -124,8 +83,7 @@
             />
           </div>
 
-          <!--button pButton type="button" label="Editar" icon="pi pi-pencil" class="p-button-info p-button-sm mt-3"
-          [routerLink]="['/edit-raffle', raffle.id]"></!--button-->
+
         </div>
       </div>
     </div>
@@ -151,10 +109,27 @@
 
 
 
-          <div *ngIf="getWinningEntry(raffle.id) as winnerEntry" class="winning-info">
+          <!--div-- *ngIf="getWinningEntry(raffle.id) as winnerEntry" class="winning-info">
             <p><strong>Número ganador:</strong> {{ winnerEntry.winningNumber || 'N/A' }}</p>
             <p><strong>Ganador:</strong> {{ winnerEntry.winningParticipant || 'No reservado' }}</p>
-          </div>
+          </!--div-->
+
+
+
+       <div *ngIf="getWinningEntry(raffle.id) as winnerEntry" class="winning-info">
+  <h5>🏆 Resultado del Sorteo</h5>
+  <p><strong>Número ganador:</strong> {{ winnerEntry.rifa.winningNumber ?? 'N/A' }}</p>
+  <p><strong>Ganador:</strong>
+    <span *ngIf="winnerEntry.ganador; else noWinner">
+      {{ winnerEntry.ganador.name }} {{ winnerEntry.ganador.lastName }}
+    </span>
+  </p>
+</div>
+
+<ng-template #noWinner>
+  <span class="no-winner">Sin ganador</span>
+</ng-template>
+
 
 
           <p-carousel
@@ -221,12 +196,6 @@
 
 
 
-<!-- ... otros elementos del formulario de creación ... -->
-
-<!-- Vista previa del banner de la rifa recién creada -->
-<!--div *ngIf="newlyCreatedRaffle">
-  <app-raffle-banner [raffle]="newlyCreatedRaffle"></app-raffle-banner>
-</!--div-->
 
 
 
@@ -234,27 +203,18 @@
 
 <app-raffle-banner #raffleBanner [raffle]="newlyCreatedRaffle"></app-raffle-banner>
 
-  <!--div class="mt-4 text-center">
-    <button pButton type="button" label="Crear Nueva Rifa" icon="pi pi-plus" class="p-button-success" (click)="showDialog()"></button>
 
-  </!--div-->
 
   <div class="floating-button-container">
     <button pButton type="button" label="Crear Nueva Rifa" icon="pi pi-plus" class="p-button-success" (click)="showDialog()"></button>
   </div>
 
-  <!--div-- class="mt-2 text-center">
-    <p-button (onClick)="sidebarVisible = true" icon="pi pi-arrow-right" />
-
-  </!--div-->
   <div class="floating-button">
     <p-button (onClick)="sidebarVisible = true" icon="pi pi-bars" [rounded]="true" severity="secondary"[text]="true" />
   </div>
 
 </div>
-<!--button pButton type="button" label="Guardar" icon="pi pi-check" class="p-button-primary" (click)="shareOnWhatsApp()"></!--button>
 
-<button-- pButton type="button" label="Abrir Modal VIP" class="p-button-success" (click)="abrirModal()"></button-->
 
 
 <p-dialog
@@ -313,60 +273,18 @@ header="Crear Nueva Rifa"
         <label for="productName" class="block font-bold mb-3">Nombre del Producto</label>
         <input id="productName" type="text" pInputText [(ngModel)]="productData.nombre" name="productName" required class="w-full" />
       </div>
-      <!--div class="col-12">
-        <label for="productDescription" class="block font-bold mb-3">Descripción del Producto</label>
-        <textarea
-          id="productDescription"
-          rows="3"
-          pInputTextarea
-          [(ngModel)]="productData.descripcion"
-          name="productDescription"
-          required
-          class="w-full"
-          (input)="validarDescripcion()"
-          >
-        </textarea>
-        <small class="text-red-500" *ngIf="descripcionInvalida">La descripción no puede superar los 1500 caracteres.</small>
-      </!--div-->
 
-
-
-      <!--div class="col-12">
-        <label for="productDescription" class="block font-bold mb-3">Descripción del Producto</label>
-
-
-        <div #mainEditor
-        contenteditable="true"
-        class="editable"
-        (input)="updateDescription()"
-        (blur)="updateDescription()">
-       </div>
-        <small class="text-red-500" *ngIf="descripcionInvalida">
-          La descripción no puede superar los 1500 caracteres.
-        </small>
-        <div class="full-width-button">
-          <p-button
-            label="Opciones de Formato"
-            severity="primary"
-            styleClass="custom-button"
-            (onClick)="openFormatDialog()">
-          </p-button>
-        </div>
-
-
-
-      </div-->
       <div class="col-12">
         <label for="productDescription" class="block font-bold mb-3">Descripción del Producto</label>
-        <!-- Contenedor relativo para el editor y el botón flotante -->
+
         <div class="editor-container">
-          <!-- Div editable para la descripción -->
+
           <div #mainEditor contenteditable="true"
                class="editable"
                (input)="updateDescription()"
                (blur)="updateDescription()">
           </div>
-          <!-- Botón flotante en la esquina inferior izquierda del editor -->
+
 
 
 
@@ -396,11 +314,11 @@ header="Crear Nueva Rifa"
 header="Ingresar Código VIP"
 [(visible)]="displayDialog1"
 [modal]="true"
-[style]="{ width: '50%' }">
+[style]="{ width: '90%' }">
 
   <div class="p-fluid grid flex-col gap-2">
     <div class="col-12">
-      <label for="productName" class="block font-bold mb-3">Ingrese el codigo VIP</label>
+      <!--label-- for="productName" class="block font-bold mb-3">Ingrese el codigo VIP</!--label-->
       <input type="text" pInputText id="codigoVip" [(ngModel)]="codigoVip" name="productName" class="w-full" />
     </div>
 
@@ -625,8 +543,8 @@ header="Participantes del sorteo terminado"
 
     <!-- Controles adicionales: Fuente, tamaño y color (se muestran horizontalmente tal y como estaban) -->
     <div class="options-group">
-      <p-dropdown [options]="fontOptions" [(ngModel)]="selectedFont" placeholder="Fuente" (onChange)="applyFont()"></p-dropdown>
-      <p-dropdown [options]="fontSizes" [(ngModel)]="selectedFontSize" placeholder="Tamaño" (onChange)="applyFontSize()"></p-dropdown>
+      <p-dropdown [options]="fontOptions" [(ngModel)]="selectedFont" placeholder="Fuente" (onChange)="applyFont()" appendTo="body" ></p-dropdown>
+      <p-dropdown [options]="fontSizes" [(ngModel)]="selectedFontSize" placeholder="Tamaño" (onChange)="applyFontSize()" appendTo="body" ></p-dropdown>
       <input type="color" [(ngModel)]="textColor" (change)="applyTextColor()" />
     </div>
 
